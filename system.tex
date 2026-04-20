@@ -1,0 +1,460 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{cite}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+\usepackage{setspace}
+
+% Fix fancyhdr headheight warning
+\setlength{\headheight}{14.5pt}
+
+% Define colors
+\definecolor{darkblue}{RGB}{0, 51, 102}
+\definecolor{lightgray}{RGB}{240, 240, 240}
+
+% Header and footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textit{Research Proposal}}
+\lhead{\textit{Autism Teaching AI}}
+\cfoot{\thepage}
+
+% Title styling
+\title{
+    \textbf{\color{darkblue}Adaptive Multimodal AI Teaching System} \\
+    \textbf{\color{darkblue}for Autism Intervention}
+    \\[0.5in]
+    \large{Research Proposal}
+}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+    \textit{PhD Research Proposal} \\
+    Department of Computer Science and Engineering \\
+    [Your Institution]
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ============================================================================
+\section{Executive Summary}
+% ============================================================================
+
+This proposal outlines a novel approach to developing an \textbf{AI-powered adaptive teaching system} designed to assist in autism spectrum disorder (ASD) intervention. The system combines Vision-Language Models (VLAs), multimodal behavioral analysis, and dynamic dialogue generation to create a personalized, scalable teaching assistant that learns from therapist interactions and adapts to individual student needs in real-time.
+
+\textbf{Key Innovation:} Unlike existing therapy robots (which are pre-scripted or presentation-only), our system performs \textit{real-time behavioral observation} of students and \textit{dynamically adapts teaching strategies} based on detected engagement, confusion, and frustration levels.
+
+\textbf{Implementation Flexibility:} The core software is platform-agnostic. It can be deployed to any robot platform available in the lab (Pepper, NAO, TurtleBot, custom platforms, or even simulation for initial phases).
+
+\textbf{Research Timeline:} 
+\begin{itemize}
+    \item \textbf{Phase 1 (8 weeks):} Software architecture + behavior analysis pipeline on public datasets
+    \item \textbf{Phase 2 (Months 3-6):} Integration with real therapy data + adaptation
+    \item \textbf{Phase 3 (Months 7-12):} Deployment and feasibility evaluation
+\end{itemize}
+
+\textbf{Expected Outcomes:}
+\begin{enumerate}
+    \item Behavioral prediction model achieving $\geq 80\%$ accuracy on autism-specific behaviors
+    \item Fine-tuned Vision-Language Model for adaptive educational interaction
+    \item End-to-end teachable AI system architecture
+    \item Feasibility insights from evaluation with real students
+    \item 2-3 peer-reviewed publications (AI + special education venues)
+\end{enumerate}
+
+\newpage
+
+% ============================================================================
+\section{Background and Motivation}
+% ============================================================================
+
+\subsection{Current State of Autism Intervention}
+
+Autism spectrum disorder (ASD) affects over 1 in 36 children globally. Effective intervention requires intensive, personalized, multi-modal teaching. However:
+
+\begin{itemize}
+    \item \textbf{Limited therapist capacity:} Insufficient trained specialists to meet demand
+    \item \textbf{High variability:} Teaching methods are not standardized; each therapist uses different approaches
+    \item \textbf{Rigid educational technology:} Existing therapy robots are pre-scripted and cannot adapt to student behavior in real-time
+    \item \textbf{Lack of measurement:} Limited automated real-time feedback on student engagement and learning progress
+\end{itemize}
+
+\subsection{Why Vision-Language Models Now?}
+
+Recent advances in VLAs (UniVLA 2025, OpenVLA 2024, LLaRA 2025) enable:
+\begin{itemize}
+    \item End-to-end learning from video demonstrations (perfect for learning from therapy recordings)
+    \item Parameter-efficient adaptation via LoRA (fine-tune on limited data)
+    \item Simultaneous perception (visual observation of student) + reasoning (teaching strategy)
+    \item Real-time multi-modal understanding (video + audio combined)
+\end{itemize}
+
+\textbf{This creates a unique opportunity:} Combine VLAs with behavioral analysis to create AI that truly understands \textit{how and why} a therapist teaches effectively, then replicate that approach.
+
+% ============================================================================
+\section{Research Objectives and Contributions}
+% ============================================================================
+
+\subsection{Primary Research Questions}
+
+\begin{enumerate}
+    \item Can we accurately predict student engagement/confusion from multi-modal therapy session recordings?
+    \item Can real-time behavioral observation enable AI systems to adapt teaching strategies dynamically?
+    \item How well can AI learn the \textit{reasoning} behind effective teaching by analyzing therapist-student interactions?
+    \item What is the practical feasibility of deploying such a system in a therapeutic or educational setting?
+\end{enumerate}
+
+\subsection{Novel Contributions}
+
+\begin{enumerate}
+    \item \textbf{First integration:} Real-time behavioral perception + adaptive teaching strategy in autism education (not previously published)
+    \item \textbf{Novel fine-tuning methodology:} Parameter-efficient VLA adaptation for therapeutic/educational interaction (distinct from manipulation/locomotion tasks)
+    \item \textbf{Teaching pattern extraction:} Framework for analyzing therapy recordings to extract implicit teaching patterns via LLM + behavioral analysis
+    \item \textbf{Platform-agnostic architecture:} Software designed to work with any robot platform, not tied to specific hardware
+    \item \textbf{Feasibility insights:} Real-world validation approach for AI tutoring systems in special education
+\end{enumerate}
+
+% ============================================================================
+\section{Technical Approach}
+% ============================================================================
+
+\subsection{System Architecture}
+
+The system has four core AI components that connect observation to adaptive response:
+
+\begin{equation}
+\text{Video/Audio} \rightarrow \text{Behavior Analysis} \rightarrow \text{Strategy Selection} \rightarrow \text{Dialogue Generation}
+\end{equation}
+
+Robot platform deployment is optional based on lab resources. The software pipeline is the core thesis contribution.
+
+\subsubsection{Component 1: Multimodal Behavioral Analysis}
+
+\textbf{Input:} Video stream (student + therapist) + audio (speech + prosody)
+
+\textbf{Processing:}
+\begin{itemize}
+    \item \textbf{Visual features:} Face landmarks + pose estimation (MediaPipe) + expression classification (fine-tuned LLaVA)
+    \item \textbf{Audio features:} Speech transcription (Whisper) + prosody analysis (speech rate, pitch, energy via librosa)
+    \item \textbf{Fusion:} Multi-modal model predicting student state $s_t$
+\end{itemize}
+
+\textbf{Output:} 
+\begin{equation}
+s_t = \arg\max_s P(s | V_t, A_t; \theta) \quad \text{where } s \in \{\text{engaged, confused, frustrated, disinterested}\}
+\end{equation}
+
+\textbf{Accuracy Target:} $\geq 80\%$ vs. therapist ground-truth annotations
+
+\subsubsection{Component 2: Teaching Strategy Selector}
+
+\textbf{Input:} Student state $(s_t)$, current topic/lesson, interaction history
+
+\textbf{Processing:}
+\begin{itemize}
+    \item Extract teaching patterns from therapy transcripts using LLM analysis
+    \item Build decision policy: \textit{``When student shows state $s$, use strategy $a$''}
+    \item Strategies include: clarify concept, simplify language, use visual aids, change modality, take break, ask guiding question
+\end{itemize}
+
+\textbf{Output:} Selected teaching strategy + parameters
+
+\subsubsection{Component 3: Dialogue Generation}
+
+\textbf{Input:} Selected strategy, student state, current topic, interaction context
+
+\textbf{Processing:}
+\begin{itemize}
+    \item LLM-based generation (GPT-3.5/4 or open-source Mixtral-8x7B)
+    \item Prompt: \textit{``I am an autism specialist. This student is [state]. Teach [topic] using [strategy]. Be clear and patient.''}
+    \item Optional TTS (Eleven Labs, glow-tts, or lab's existing system)
+\end{itemize}
+
+\textbf{Output:} Natural language teaching response (+ audio if TTS available)
+
+\subsubsection{Component 4: Vision-Language Model (Optional Robot Grounding)}
+
+\textbf{If deploying to a robot platform:}
+\begin{itemize}
+    \item Base pre-trained VLA (OpenVLA-7B or UniVLA)
+    \item Fine-tune with LoRA on therapy interaction datasets
+    \item Learn robot gestures, timing, and interaction patterns from therapist behavior
+    \item Real-time perception-action loop
+\end{itemize}
+
+\textbf{Important:} This component only activates if/when robot deployment occurs. Phase 1-2 focus on the perception + strategy + dialogue pipeline.
+
+\subsection{Technology Stack}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Component} & \textbf{Technology/Framework} \\
+\hline
+Behavioral Analysis & LLaVA, Qwen-VL (Hugging Face) \\
+\hline
+Pose + Face Detection & MediaPipe \\
+\hline
+Audio Analysis & Whisper (speech-to-text) + librosa (prosody) \\
+\hline
+Strategy Selection & Decision tree / learned policy (numpy/sklearn) \\
+\hline
+Dialogue Generation & GPT-3.5/4 API or Mixtral-8x7B \\
+\hline
+Optional: VLA Fine-tuning & OpenVLA-7B + LoRA (PyTorch) \\
+\hline
+Optional: TTS & Eleven Labs API or open-source TTS \\
+\hline
+Optional: Robot Deployment & ROS2, Pepper SDK, NAO SDK, or platform of choice \\
+\hline
+\end{tabular}
+\end{table}
+
+All technologies are either open-source or have free tier APIs.
+
+% ============================================================================
+\section{Datasets and Data Resources}
+% ============================================================================
+
+\subsection{Phase 1 (Demo): Public Datasets}
+
+\begin{itemize}
+    \item \textbf{MMASD:} MultiModal ASD Dataset (6+ hours, public therapy sessions)
+    \item \textbf{Expression recognition:} FER2013, AffectNet (general expressions)
+    \item \textbf{Educational videos:} Khan Academy, OpenStax, TED-Ed (for strategy synthesis)
+\end{itemize}
+
+No permissions needed; freely available.
+
+\subsection{Phase 2+ (Full Implementation): Real Therapy Data}
+
+\begin{itemize}
+    \item Partner with autism intervention centers for therapy video/audio
+    \item Target: 50-100 hours (can start smaller: 10-20 hours)
+    \item De-identify + HIPAA compliance
+    \item Therapist annotations for ground-truth behavioral labels
+\end{itemize}
+
+\subsection{Data Privacy}
+
+\begin{itemize}
+    \item All public datasets in Phase 1; no patient data required
+    \item Phase 2 therapy data: de-identified, HIPAA-compliant, IRB-approved
+    \item Models released anonymously; real patient data never shared
+\end{itemize}
+
+% ============================================================================
+\section{Project Timeline and Milestones}
+% ============================================================================
+
+\subsection{Phase 1: Software Architecture Demo (Weeks 1-8)}
+
+Build a working end-to-end AI teaching system with public datasets.
+
+\begin{center}
+\begin{tabular}{|p{2cm}|p{6.5cm}|p{2.5cm}|}
+\hline
+\textbf{Week(s)} & \textbf{Milestone} & \textbf{Deliverable} \\
+\hline
+1-3 & Behavioral analysis pipeline on MMASD & Model checkpoint + notebook \\
+\hline
+3-5 & Strategy extraction from transcripts & Decision policy document \\
+\hline
+5-8 & Dialogue generation + integration & End-to-end demo video \\
+\hline
+\textbf{Week 8} & \textbf{Demo Ready} & Reproducible code + short paper \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Phase 2: Real Data Integration (Months 3-6)}
+
+\begin{enumerate}
+    \item Request + receive therapy data from partners (HIPAA-compliant)
+    \item Fine-tune behavioral model on real student interactions
+    \item Adapt dialogue generation for real therapy context
+    \item First publication: ``Real-Time Behavioral Adaptation in AI Teaching Systems for Autism''
+\end{enumerate}
+
+\textbf{Robot integration (if lab has platform available):} Optional during this phase. Can add VLA component and connect to existing robot.
+
+\subsection{Phase 3: Evaluation and Feasibility (Months 7-12)}
+
+\begin{enumerate}
+    \item IRB approval for small feasibility study
+    \item Deploy system (with or without robot, depending on lab resources)
+    \item Evaluate with 5-10 students with autism
+    \item Measure: engagement, learning outcomes, user acceptance
+    \item Second publication + thesis
+\end{enumerate}
+
+% ============================================================================
+\section{Evaluation Metrics}
+% ============================================================================
+
+\subsection{Phase 1: Software Quality}
+
+\begin{itemize}
+    \item Behavioral prediction accuracy: $\geq 80\%$ vs. therapist labels
+    \item Strategy selection coherence: Expert (therapist) ratings 4+ / 5
+    \item Dialogue naturalness: Human raters 4+ / 5 on Likert scale
+    \item Code reproducibility: All code + models on GitHub/Hugging Face
+\end{itemize}
+
+\subsection{Phase 2: Real Data Performance}
+
+\begin{itemize}
+    \item Behavioral model validation: Inter-rater agreement (Cohen's $\kappa \geq 0.70$)
+    \item Adaptation effectiveness: Student engagement before vs. after strategy selection
+\end{itemize}
+
+\subsection{Phase 3: Real-World Feasibility}
+
+\begin{itemize}
+    \item Student engagement: Measured via gaze, gesture, speech
+    \item Learning outcomes: Pre/post assessment scores
+    \item Therapist usability: System usability scale (SUS) score
+    \item Feasibility: Can system be integrated into real therapy workflows?
+\end{itemize}
+
+% ============================================================================
+\section{Related Work and Positioning}
+% ============================================================================
+
+\subsection{What Exists}
+
+\begin{itemize}
+    \item Therapy robots (Pepper, NAO): Pre-scripted, cannot adapt to student behavior
+    \item Autism behavior recognition (Deng et al., 2024): Can detect behaviors but no teaching integration
+    \item Vision-Language Models (OpenVLA, UniVLA): SOTA for robotics but not adapted to education
+    \item LLM-based tutoring: Text-only, no visual perception of student
+\end{itemize}
+
+\subsection{What's Missing (Our Contribution)}
+
+\begin{enumerate}
+    \item \textbf{Real-time behavioral observation} informed by video analysis
+    \item \textbf{Adaptive teaching strategies} based on observed student state
+    \item \textbf{Learning from therapist behavior} via multimodal analysis
+    \item \textbf{End-to-end system} connecting perception $\rightarrow$ reasoning $\rightarrow$ response
+\end{enumerate}
+
+This work is genuinely novel: No published paper combines all four elements.
+
+% ============================================================================
+\section{Estimated Resources}
+% ============================================================================
+
+\subsection{Computational}
+
+\begin{itemize}
+    \item GPU: 1x NVIDIA A100 (24GB) or similar for model training
+    \item Storage: 500GB-1TB for datasets + checkpoints
+    \item Cloud compute (optional): AWS/GCP for large-scale fine-tuning
+\end{itemize}
+
+\subsection{Data}
+
+\begin{itemize}
+    \item Public datasets (MMASD, FER2013): Free
+    \item Real therapy data: Depends on partner availability (often shared for research)
+\end{itemize}
+
+\subsection{Software}
+
+\begin{itemize}
+    \item Open-source: PyTorch, Hugging Face, MediaPipe, librosa
+    \item APIs (optional): GPT-3.5/4 (pay-as-you-go), Eleven Labs TTS (free tier exists)
+    \item Robot platform: Use whatever lab already has (no new hardware purchase required)
+\end{itemize}
+
+\subsection{Estimated Budget (Optional)}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|r|}
+\hline
+Cloud GPU compute (12 months) & \$2000-4000 \\
+\hline
+API costs (Whisper, GPT-4, TTS) & \$500-1000 \\
+\hline
+Robot platform & \$0 (use lab's existing resources) \\
+\hline
+\textbf{Total} & \textbf{\$2500-5000} \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Note:} Hardware costs are minimal because we use robots the lab already has.
+
+% ============================================================================
+\section{Risks and Mitigation}
+% ============================================================================
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{2.5cm}|p{3.5cm}|p{1.5cm}|}
+\hline
+\textbf{Risk} & \textbf{Mitigation} & \textbf{Likelihood} \\
+\hline
+Therapy data unavailable & Start with MMASD public data; frameworks work with any dataset & Low \\
+\hline
+VLA adaptation underperforms & Use LLM dialogue as backup; combine approaches & Low \\
+\hline
+IRB approval delays & Phase 1-2 complete before human studies needed & Low \\
+\hline
+Robot integration issues & Software works without robot; add later if needed & Medium \\
+\hline
+\end{tabular}
+\end{table}
+
+% ============================================================================
+\section{Conclusion}
+% ============================================================================
+
+This proposal outlines a feasible, high-impact PhD research project combining recent advances in Vision-Language Models, multimodal analysis, and adaptive dialogue to address a genuine gap in autism intervention technology.
+
+\textbf{Key strengths:}
+\begin{itemize}
+    \item \textbf{Novel:} First system to combine behavioral observation + adaptive teaching in autism context
+    \item \textbf{Feasible:} Uses proven technologies (OpenVLA, LLaVA, Whisper); no fundamental research blockers
+    \item \textbf{Scalable:} Software-first design works with any robot platform (or none)
+    \item \textbf{Impactful:} Addresses real need in special education and autism intervention
+    \item \textbf{Publishable:} Clear path to 2-3 high-quality publications
+\end{itemize}
+
+Phase 1 (proof-of-concept) can begin immediately with public datasets.
+
+\newpage
+
+% ============================================================================
+\section*{References}
+% ============================================================================
+
+\begin{thebibliography}{99}
+
+\bibitem{Mishra2024} Mishra, A., et al. (2024). Human-mediated Large Language Models for Robotic Intervention in Children with Autism Spectrum Disorders. \textit{arXiv:2402.00260}.
+
+\bibitem{Kim2024} Kim, A., et al. (2024). OpenVLA: Towards a Foundation Model for Vision and Action. In \textit{ICML 2024}.
+
+\bibitem{Bu2025} Bu, Z., et al. (2025). UniVLA: A Unified Vision-Language Action Model. \textit{RSS 2025}.
+
+\bibitem{Deng2024} Deng, J., et al. (2024). Audio-Visual Autism Behavior Recognition. \textit{arXiv:2406.02554}.
+
+\end{thebibliography}
+
+\end{document}

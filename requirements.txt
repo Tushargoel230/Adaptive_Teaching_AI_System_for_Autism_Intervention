@@ -1,0 +1,46 @@
+# Adaptive Teaching AI System for Autism Intervention
+# Python Dependencies
+
+# Core ML/Vision
+numpy>=1.24.0
+opencv-python>=4.7.0
+mediapipe>=0.10.0
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Transformers and Models
+transformers>=4.30.0
+huggingface-hub>=0.16.0
+
+# LLM Integration
+openai>=1.0.0  # For GPT-3.5/4 API
+ollama>=0.1.0  # For local Mixtral/LLaMA (optional)
+
+# Audio Processing
+librosa>=0.10.0
+soundfile>=0.12.0
+scipy>=1.10.0
+
+# Speech Recognition
+SpeechRecognition>=3.10.0
+
+# Data and Analysis
+pandas>=2.0.0
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+
+# Utilities
+python-dotenv>=0.21.0
+pydantic>=2.0.0
+pyyaml>=6.0
+
+# ROS2 Integration (optional, for robot deployment)
+# rclpy>=0.12.0
+# rclcpp_message_filters>=0.6.0
+
+# Development
+pytest>=7.3.0
+pytest-cov>=4.1.0
+black>=23.3.0
+flake8>=6.0.0
+mypy>=1.3.0
